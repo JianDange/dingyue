@@ -1,0 +1,51 @@
+# Wise
+DOMAIN-SUFFIX,wise.com
+DOMAIN-SUFFIX,transferwise.com
+
+# Monzo
+DOMAIN-SUFFIX,monzo.com
+DOMAIN-SUFFIX,api.sta.monzo-alt.net
+DOMAIN-SUFFIX,internal-api.monzo.com
+DOMAIN-SUFFIX,monzo.statuspage.io
+
+# HSBC UK
+DOMAIN-SUFFIX,hsbc.co.uk
+
+# Chase
+DOMAIN-SUFFIX,chase.co.uk
+
+# Zilch
+DOMAIN-SUFFIX,payzilch.com
+
+# Trading 212
+DOMAIN-SUFFIX,trading212.com
+
+# Curve
+DOMAIN-SUFFIX,curve.app
+DOMAIN-SUFFIX,imaginecurve.com
+
+# Uphold
+DOMAIN-SUFFIX,uphold.com
+
+# 信用分
+DOMAIN-SUFFIX,creditkarma.co.uk
+DOMAIN-SUFFIX,experian.co.uk
+DOMAIN-SUFFIX,clearscore.com
+DOMAIN-SUFFIX,totallymoney.com
+
+# Capital One
+DOMAIN-SUFFIX,capitalone.co.uk
+
+# Barclays
+DOMAIN-SUFFIX,barclays.co.uk
+DOMAIN-SUFFIX,barclays.com
+DOMAIN-SUFFIX,bclays-ads.aimatch.com
+
+# Plum
+DOMAIN-SUFFIX,withplum.com
+
+# Guavapay
+DOMAIN-SUFFIX,guavapay.com
+
+# Neverless
+DOMAIN-SUFFIX,neverless.com
