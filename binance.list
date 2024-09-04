@@ -1,106 +1,105 @@
-## Binance - 2024.08.20
-
-host, www.binance.com, Binance
-host, api.binance.com, Binance
-host, fapibak.binance.com, Binance
-host, accounts.binance.com, Binance
-host, native.binance.com, Binance
-host, stream.binance.com, Binance
-host, dstream.binance.com, Binance
-host, fstream.binance.com, Binance
-host, nbstream.binance.com, Binance
-host, sfstream.binance.com, Binance
-host, themis.binance.com, Binance
-host, api.saasexch.cc, Binance
-host, api.saasexch.co, Binance
-host, api.saasexch.io, Binance
-host, api.saasexch.com, Binance
-host, report.binance.im, Binance
-host, www.binance.info, Binance
-host, accounts.binance.info, Binance
-host, edge-api.saasexch.com, Binance
-host, stream.binance.info, Binance
-host, fstream.binance.info, Binance
-host, dstream.binance.info, Binance
-host, nbstream.binance.info, Binance
-host, native.binance.info, Binance
-host, log.bntrace.com, Binance
-host, public.bnbstatic.com, Binance
-host, bin.bnbstatic.com, Binance
-host, www.binancecnt.com, Binance
-host, www.yingwangtech.cloud, Binance
-host, sdstream.yingwangtech.net, Binance
-host, nbstream.yingwangtech.net, Binance
-host, stream.yingwangtech.net, Binance
-host, sfstream.yingwangtech.net, Binance
-host, fstream.yingwangtech.net, Binance
-host, www.yingwangtech.net, Binance
-host, www.yingwangtech.mobi, Binance
-host, www.yingwangtech.club, Binance
-host, www.yingwangtech.cc, Binance
+[Rule]
+DOMAIN-SUFFIX,www.binance.com
+DOMAIN-SUFFIX,api.binance.com
+DOMAIN-SUFFIX,fapibak.binance.com
+DOMAIN-SUFFIX,accounts.binance.com
+DOMAIN-SUFFIX,native.binance.com
+DOMAIN-SUFFIX,stream.binance.com
+DOMAIN-SUFFIX,dstream.binance.com
+DOMAIN-SUFFIX,fstream.binance.com
+DOMAIN-SUFFIX,nbstream.binance.com
+DOMAIN-SUFFIX,sfstream.binance.com
+DOMAIN-SUFFIX,themis.binance.com
+DOMAIN-SUFFIX,api.saasexch.cc
+DOMAIN-SUFFIX,api.saasexch.co
+DOMAIN-SUFFIX,api.saasexch.io
+DOMAIN-SUFFIX,api.saasexch.com
+DOMAIN-SUFFIX,report.binance.im
+DOMAIN-SUFFIX,www.binance.info
+DOMAIN-SUFFIX,accounts.binance.info
+DOMAIN-SUFFIX,edge-api.saasexch.com
+DOMAIN-SUFFIX,stream.binance.info
+DOMAIN-SUFFIX,fstream.binance.info
+DOMAIN-SUFFIX,dstream.binance.info
+DOMAIN-SUFFIX,nbstream.binance.info
+DOMAIN-SUFFIX,native.binance.info
+DOMAIN-SUFFIX,log.bntrace.com
+DOMAIN-SUFFIX,public.bnbstatic.com
+DOMAIN-SUFFIX,bin.bnbstatic.com
+DOMAIN-SUFFIX,www.binancecnt.com
+DOMAIN-SUFFIX,www.yingwangtech.cloud
+DOMAIN-SUFFIX,sdstream.yingwangtech.net
+DOMAIN-SUFFIX,nbstream.yingwangtech.net
+DOMAIN-SUFFIX,stream.yingwangtech.net
+DOMAIN-SUFFIX,sfstream.yingwangtech.net
+DOMAIN-SUFFIX,fstream.yingwangtech.net
+DOMAIN-SUFFIX,www.yingwangtech.net
+DOMAIN-SUFFIX,www.yingwangtech.mobi
+DOMAIN-SUFFIX,www.yingwangtech.club
+DOMAIN-SUFFIX,www.yingwangtech.cc
 
 # Related Domains
-host, m.api.forter.com, Binance
-host, www.mokexapp.net, Binance
-host, native.mokexapp.net, Binance
-host, crt.r2m01.amazontrust.com, Binance
-host, crt.rootca1.amazontrust.com, Binance
-host, crt.rootg2.amazontrust.com, Binance
-host, d3sknckuh1o9tg.cloudfront.net, Binance
-host, public-1306379396.file.myqcloud.com, Binance
-host, domain-config-1306379396.file.myqcloud.com, Binance
-host, b2d8207c-e08a-45cd-bc97-268da85016d2-addfd325e6e3.cdn.forter.com, Binance
-host, bin-prod-new-websocket-alb-1463526464.ap-northeast-1.elb.amazonaws.com, Binance
-host, aad90d5c0e88c4b4285bd912f64d970d-1403944741.ap-northeast-1.elb.amazonaws.com, Binance
+DOMAIN-SUFFIX,m.api.forter.com
+DOMAIN-SUFFIX,www.mokexapp.net
+DOMAIN-SUFFIX,native.mokexapp.net
+DOMAIN-SUFFIX,crt.r2m01.amazontrust.com
+DOMAIN-SUFFIX,crt.rootca1.amazontrust.com
+DOMAIN-SUFFIX,crt.rootg2.amazontrust.com
+DOMAIN-SUFFIX,d3sknckuh1o9tg.cloudfront.net
+DOMAIN-SUFFIX,public-1306379396.file.myqcloud.com
+DOMAIN-SUFFIX,domain-config-1306379396.file.myqcloud.com
+DOMAIN-SUFFIX,b2d8207c-e08a-45cd-bc97-268da85016d2-addfd325e6e3.cdn.forter.com
+DOMAIN-SUFFIX,bin-prod-new-websocket-alb-1463526464.ap-northeast-1.elb.amazonaws.com
+DOMAIN-SUFFIX,aad90d5c0e88c4b4285bd912f64d970d-1403944741.ap-northeast-1.elb.amazonaws.com
 
-host-suffix, appsflayer.com, Binance
-host-suffix, binance.cc, Binance
-host-suffix, binance.charity, Binance
-host-suffix, binance.cloud, Binance
-host-suffix, binance.co, Binance
-host-suffix, binance.com, Binance
-host-suffix, binance.info, Binance
-host-suffix, binance.me, Binance
-host-suffix, binance.im, Binance
-host-suffix, binance.net, Binance
-host-suffix, binance.org, Binance
-host-suffix, binance.us, Binance
-host-suffix, binance.vision, Binance
-host-suffix, binanceapi.com, Binance
-host-suffix, binancezh.be, Binance
-host-suffix, binancezh.biz, Binance
-host-suffix, binancezh.cc, Binance
-host-suffix, binancezh.co, Binance
-host-suffix, binancezh.com, Binance
-host-suffix, binancezh.info, Binance
-host-suffix, binancezh.ink, Binance
-host-suffix, binancezh.kim, Binance
-host-suffix, binancezh.link, Binance
-host-suffix, binancezh.live, Binance
-host-suffix, binancezh.mobi, Binance
-host-suffix, binancezh.net, Binance
-host-suffix, binancezh.pro, Binance
-host-suffix, binancezh.sh, Binance
-host-suffix, binancezh.top, Binance
-host-suffix, bnappzh.co, Binance
-host-suffix, bnbstatic.com, Binance
-host-suffix, bnbzh.ac, Binance
-host-suffix, bntrace.com, Binance
-host-suffix, binancecnt.com, Binance
-host-suffix, saasexch.cc, Binance
-host-suffix, saasexch.co, Binance
-host-suffix, saasexch.io, Binance
-host-suffix, saasexch.com, Binance
-host-suffix, yingwangtech.cloud, Binance
-host-suffix, yingwangtech.net, Binance
-host-suffix, yingwangtech.mobi, Binance
-host-suffix, yingwangtech.club, Binance
-host-suffix, yingwangtech.cc, Binance
+DOMAIN-SUFFIX,appsflayer.com
+DOMAIN-SUFFIX,binance.cc
+DOMAIN-SUFFIX,binance.charity
+DOMAIN-SUFFIX,binance.cloud
+DOMAIN-SUFFIX,binance.co
+DOMAIN-SUFFIX,binance.com
+DOMAIN-SUFFIX,binance.info
+DOMAIN-SUFFIX,binance.me
+DOMAIN-SUFFIX,binance.im
+DOMAIN-SUFFIX,binance.net
+DOMAIN-SUFFIX,binance.org
+DOMAIN-SUFFIX,binance.us
+DOMAIN-SUFFIX,binance.vision
+DOMAIN-SUFFIX,binanceapi.com
+DOMAIN-SUFFIX,binancezh.be
+DOMAIN-SUFFIX,binancezh.biz
+DOMAIN-SUFFIX,binancezh.cc
+DOMAIN-SUFFIX,binancezh.co
+DOMAIN-SUFFIX,binancezh.com
+DOMAIN-SUFFIX,binancezh.info
+DOMAIN-SUFFIX,binancezh.ink
+DOMAIN-SUFFIX,binancezh.kim
+DOMAIN-SUFFIX,binancezh.link
+DOMAIN-SUFFIX,binancezh.live
+DOMAIN-SUFFIX,binancezh.mobi
+DOMAIN-SUFFIX,binancezh.net
+DOMAIN-SUFFIX,binancezh.pro
+DOMAIN-SUFFIX,binancezh.sh
+DOMAIN-SUFFIX,binancezh.top
+DOMAIN-SUFFIX,bnappzh.co
+DOMAIN-SUFFIX,bnbstatic.com
+DOMAIN-SUFFIX,bnbzh.ac
+DOMAIN-SUFFIX,bntrace.com
+DOMAIN-SUFFIX,binancecnt.com
+DOMAIN-SUFFIX,saasexch.cc
+DOMAIN-SUFFIX,saasexch.co
+DOMAIN-SUFFIX,saasexch.io
+DOMAIN-SUFFIX,saasexch.com
+DOMAIN-SUFFIX,yingwangtech.cloud
+DOMAIN-SUFFIX,yingwangtech.net
+DOMAIN-SUFFIX,yingwangtech.mobi
+DOMAIN-SUFFIX,yingwangtech.club
+DOMAIN-SUFFIX,yingwangtech.cc
 
-ip-cidr, 47.107.98.27/32, Binance
-ip-cidr, 47.107.127.135/32, Binance
-ip-cidr, 52.68.117.1/32, Binance
-ip-cidr, 35.77.148.188/32, Binance
-ip-cidr, 54.150.106.1/32, Binance
-ip-cidr, 13.248.135.87/32, Binance
-ip-cidr, 47.107.32.31/32, Binance
+IP-CIDR,47.107.98.27/32
+IP-CIDR,47.107.127.135/32
+IP-CIDR,52.68.117.1/32
+IP-CIDR,35.77.148.188/32
+IP-CIDR,54.150.106.1/32
+IP-CIDR,13.248.135.87/32
+IP-CIDR,47.107.32.31/32
