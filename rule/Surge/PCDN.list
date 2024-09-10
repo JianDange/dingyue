@@ -18,4 +18,6 @@ DOMAIN-SUFFIX,tpa-hcdn.iqiyi.com
 DOMAIN-SUFFIX,pcdn.xmcdn.com
 DOMAIN-SUFFIX,szbdyd.com
 DOMAIN-SUFFIX,mcdn.bilivideo.cn
+DOMAIN-SUFFIX,*pcdn.*biliapi\.net
 DOMAIN,pcdn.yximgs.com
+
