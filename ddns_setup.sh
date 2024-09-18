@@ -18,4 +18,7 @@ apt-get install -y jq
 (crontab -l 2>/dev/null; echo "*/2 * * * * /root/ddns.sh >> /root/ddns.log 2>&1") | crontab -
 (crontab -l 2>/dev/null; echo "0 0 * * * > /root/ddns.log") | crontab -
 
-echo "定时任务已添加并启动。"
+# 立即执行一次 ddns.sh
+bash /root/ddns.sh
+
+echo "定时任务已添加并启动。并立即执行了一次 ddns.sh"
