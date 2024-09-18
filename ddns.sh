@@ -1,26 +1,9 @@
 #!/bin/bash
 
-# 自动添加定时任务的函数
-setup_cron_job() {
-  # 检查是否已经有相关的cron任务
-  crontab -l | grep -q "/root/ddns.sh"
-  if [ $? -ne 0 ]; then
-    # 如果没有找到相关任务，则添加定时任务
-    (crontab -l; echo "*/2 * * * * /root/ddns.sh >> /root/ddns.log 2>&1") | crontab -
-    (crontab -l; echo "0 0 * * * > /root/ddns.log") | crontab -
-    echo "定时任务已添加"
-  else
-    echo "定时任务已经存在"
-  fi
-}
-
-# 调用自动添加定时任务的函数
-setup_cron_job
-
 # Cloudflare 设置
 API_KEY="123"
 ZONE_ID="123"
-RECORD_NAME="二级域名"
+RECORD_NAME="域名"
 RECORD_TYPE="A" # 或者 AAAA，如果你在使用IPv6
 
 # 获取当前的公网IP
