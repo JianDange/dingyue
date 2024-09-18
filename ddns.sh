@@ -3,7 +3,7 @@
 # Cloudflare 设置
 API_KEY="123"
 ZONE_ID="123"
-RECORD_NAME="域名"
+RECORD_NAME="二级域名"
 RECORD_TYPE="A" # 或者 AAAA，如果你在使用IPv6
 
 # 获取当前的公网IP
