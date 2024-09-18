@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 下载 ddns.sh 并设置权限
-wget -N https://raw.githubusercontent.com/JianDange/dingyue/main/ddns.sh && chmod +x ddns.sh
+wget -N https://raw.githubusercontent.com/JianDange/dingyue/main/DDNS/ddns.sh && chmod +x ddns.sh
 
 # 提示用户输入 API_KEY、ZONE_ID 和 RECORD_NAME
 read -p "请输入API_KEY: " api_key
