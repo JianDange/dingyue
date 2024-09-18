@@ -21,4 +21,4 @@ apt-get install -y jq
 # 立即执行一次 ddns.sh
 bash /root/ddns.sh
 
-echo "定时任务已添加并启动。并立即执行了一次 ddns.sh"
+echo "定时任务已添加并启动。"
