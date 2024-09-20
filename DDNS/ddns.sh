@@ -7,7 +7,11 @@ RECORD_NAME="二级域名"
 RECORD_TYPE="A" # 或者 AAAA，如果你在使用IPv6
 
 # 获取当前的公网IP
-IP=$(curl -s http://ipv4.icanhazip.com)
+if [ "$RECORD_TYPE" == "AAAA" ]; then
+  IP=$(curl -s http://ipv6.icanhazip.com) # 获取 IPv6 地址
+else
+  IP=$(curl -s http://ipv4.icanhazip.com) # 获取 IPv4 地址
+fi
 
 # 打印检测到的公网IP地址
 echo "Detected IP: $IP"
