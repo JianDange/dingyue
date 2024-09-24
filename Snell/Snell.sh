@@ -137,22 +137,22 @@ EOF
     # 创建 Systemd 服务文件
     cat > ${SYSTEMD_SERVICE_FILE} << EOF
 [Unit]
-Description=Snell Proxy Service
-After=network.target
+   Description=Snell Proxy Service
+   After=network.target
 
-[Service]
-Type=simple
-User=nobody
-Group=nogroup
-LimitNOFILE=32768
-ExecStart=${INSTALL_DIR}/snell-server -c ${CONF_FILE}
-AmbientCapabilities=CAP_NET_BIND_SERVICE
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=snell-server
+   [Service]
+   Type=simple
+   User=root
+   Group=root
+   LimitNOFILE=32768
+   ExecStart=/usr/local/bin/snell-server -c /root/snell/snell-server.conf
+   AmbientCapabilities=CAP_NET_BIND_SERVICE
+   StandardOutput=syslog
+   StandardError=syslog
+   SyslogIdentifier=snell-server
 
-[Install]
-WantedBy=multi-user.target
+   [Install]
+   WantedBy=multi-user.target
 EOF
 
     # 重载 Systemd 配置
