@@ -223,7 +223,7 @@ uninstall_snell() {
 
     # 删除安装的文件和目录
     rm /usr/local/bin/snell-server
-    rm -rf /etc/snell
+    rm -rf /root/snell
 
     echo -e "${GREEN}Snell 卸载成功${RESET}"
     echo "$(date '+%Y-%m-%d %H:%M:%S') - Snell 卸载成功" >> "$LOG_FILE"
