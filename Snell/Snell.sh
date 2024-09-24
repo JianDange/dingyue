@@ -18,7 +18,7 @@ SERVICE_NAME="snell.service"
 # Snell 配置
 SNELL_VERSION="4.1.1"
 INSTALL_DIR="/usr/local/bin"
-CONF_DIR="/etc/snell"
+CONF_DIR="/root/snell"
 CONF_FILE="${CONF_DIR}/snell-server.conf"
 
 # 检查是否以 root 权限运行
@@ -75,18 +75,17 @@ EOF
     fi
 
     # 创建 systemd 服务文件
-    cat > ${SYSTEMD_SERVICE_FILE} << EOF
+    cat > /etc/systemd/system/${SERVICE_NAME} << EOF
 [Unit]
 Description=Snell Proxy Service
 After=network.target
 
 [Service]
 Type=simple
-User=nobody
-Group=nogroup
+User=root
+Group=root
 LimitNOFILE=32768
 ExecStart=${INSTALL_DIR}/snell-server -c ${CONF_FILE}
-AmbientCapabilities=CAP_NET_BIND_SERVICE
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=snell-server
@@ -100,9 +99,15 @@ EOF
     systemctl enable ${SERVICE_NAME}
     systemctl start ${SERVICE_NAME}
 
-    echo -e "${GREEN}Snell 安装完成${RESET}"
-    echo "配置文件位置: ${CONF_FILE}"
-    echo "请查看配置文件以获取端口和 PSK 信息"
+    # 获取本机IP地址
+    HOST_IP=$(curl -s http://checkip.amazonaws.com)
+
+    # 获取IP所在国家
+    IP_COUNTRY=$(curl -s http://ipinfo.io/${HOST_IP}/country)
+
+    echo -e "${GREEN}Snell 安装成功${RESET}"
+    echo "${IP_COUNTRY} = snell, ${HOST_IP}, ${RANDOM_PORT}, psk = ${RANDOM_PSK}, version = 4, reuse = true, tfo = true"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Snell 安装成功: ${IP_COUNTRY}, ${HOST_IP}, ${RANDOM_PORT}, psk=${RANDOM_PSK}" >> "$LOG_FILE"
 }
 
 # 卸载 Snell
