@@ -131,7 +131,6 @@ uninstall_snell() {
     echo -e "${GREEN}Snell 卸载完成${RESET}"
 }
 
-
 # 启动 Snell
 start_snell() {
     echo -e "${CYAN}正在启动 Snell${RESET}"
