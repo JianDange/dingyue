@@ -15,13 +15,11 @@ LOG_FILE="/var/log/snell_manager.log"
 # 服务名称
 SERVICE_NAME="snell.service"
 
-# 等待其他 apt 进程完成
-wait_for_apt() {
-    while fuser /var/lib/dpkg/lock >/dev/null 2>&1 || fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/cache/apt/archives/lock >/dev/null 2>&1; do
-        echo -e "${YELLOW}等待其他 apt 进程完成${RESET}"
-        sleep 1
-    done
-}
+# Snell 配置
+SNELL_VERSION="4.1.1"
+INSTALL_DIR="/usr/local/bin"
+CONF_DIR="/etc/snell"
+CONF_FILE="${CONF_DIR}/snell-server.conf"
 
 # 检查是否以 root 权限运行
 check_root() {
@@ -31,289 +29,190 @@ check_root() {
     fi
 }
 
-# 检查 Snell 是否已安装
-check_snell_installed() {
-    if command -v snell-server &> /dev/null; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# 检查 Snell 是否正在运行
-check_snell_running() {
-    systemctl is-active --quiet "$SERVICE_NAME"
-    return $?
-}
-
-# 启动 Snell 服务
-start_snell() {
-    echo -e "${CYAN}正在启动 Snell${RESET}"
-    systemctl start "$SERVICE_NAME"
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Snell 启动成功${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - Snell 启动成功" >> "$LOG_FILE"
-    else
-        echo -e "${RED}Snell 启动失败${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - Snell 启动失败" >> "$LOG_FILE"
-    fi
-}
-
-# 停止 Snell 服务
-stop_snell() {
-    echo -e "${CYAN}正在停止 Snell${RESET}"
-    systemctl stop "$SERVICE_NAME"
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Snell 停止成功${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - Snell 停止成功" >> "$LOG_FILE"
-    else
-        echo -e "${RED}Snell 停止失败${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - Snell 停止失败" >> "$LOG_FILE"
-    fi
-}
-
 # 安装 Snell
 install_snell() {
     echo -e "${CYAN}正在安装 Snell${RESET}"
 
-    # 等待其他 apt 进程完成
-    wait_for_apt
+    # 检查是否已安装
+    if [ -f "${INSTALL_DIR}/snell-server" ]; then
+        echo -e "${YELLOW}Snell 已经安装。如需重新安装，请先卸载。${RESET}"
+        return
+    fi
 
-    # 安装必要的软件包
-    apt update && apt install -y wget unzip curl
-
-    # 下载 Snell 服务器文件
-    ARCH=$(arch)
-    SNELL_URL=""
-    INSTALL_DIR="/usr/local/bin"
-    SYSTEMD_SERVICE_FILE="/lib/systemd/system/snell.service"
-    CONF_DIR="/root/snell"
-    CONF_FILE="${CONF_DIR}/snell-server.conf"
-
-    if [[ ${ARCH} == "aarch64" ]]; then
-        SNELL_URL="https://dl.nssurge.com/snell/snell-server-v4.1.1-linux-aarch64.zip"
+    # 下载 Snell
+    ARCH=$(uname -m)
+    if [[ "$ARCH" == "x86_64" ]]; then
+        DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-linux-amd64.zip"
+    elif [[ "$ARCH" == "aarch64" ]]; then
+        DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-linux-aarch64.zip"
     else
-        SNELL_URL="https://dl.nssurge.com/snell/snell-server-v4.1.1-linux-amd64.zip"
+        echo -e "${RED}不支持的架构: $ARCH${RESET}"
+        return 1
     fi
 
-    # 下载 Snell 服务器文件
-    wget ${SNELL_URL} -O snell-server.zip
+    wget -O snell-server.zip $DOWNLOAD_URL
     if [ $? -ne 0 ]; then
-        echo -e "${RED}下载 Snell 失败。${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - 下载 Snell 失败" >> "$LOG_FILE"
-        exit 1
+        echo -e "${RED}下载 Snell 失败${RESET}"
+        return 1
     fi
 
-    # 解压缩文件到指定目录
+    # 解压并安装
     unzip -o snell-server.zip -d ${INSTALL_DIR}
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}解压缩 Snell 失败。${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - 解压缩 Snell 失败" >> "$LOG_FILE"
-        exit 1
-    fi
-
-    # 删除下载的 zip 文件
+    chmod +x ${INSTALL_DIR}/snell-server
     rm snell-server.zip
 
-    # 赋予执行权限
-    chmod +x ${INSTALL_DIR}/snell-server
-
-    # 生成随机端口和密码
-    RANDOM_PORT=$(shuf -i 30000-65000 -n 1)
-    RANDOM_PSK=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 20)
-
-    # 创建配置文件目录
+    # 生成配置文件
     mkdir -p ${CONF_DIR}
-
-    # 创建配置文件
-    cat > ${CONF_FILE} << EOF
+    if [ ! -f "${CONF_FILE}" ]; then
+        RANDOM_PORT=$(shuf -i 10000-65000 -n 1)
+        RANDOM_PSK=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 31)
+        cat > ${CONF_FILE} << EOF
 [snell-server]
-dns = 1.1.1.1, 8.8.8.8, 2001:4860:4860::8888
 listen = ::0:${RANDOM_PORT}
 psk = ${RANDOM_PSK}
 ipv6 = true
 EOF
+    fi
 
-    # 创建 Systemd 服务文件
+    # 创建 systemd 服务文件
     cat > ${SYSTEMD_SERVICE_FILE} << EOF
 [Unit]
-   Description=Snell Proxy Service
-   After=network.target
+Description=Snell Proxy Service
+After=network.target
 
-   [Service]
-   Type=simple
-   User=root
-   Group=root
-   LimitNOFILE=32768
-   ExecStart=/usr/local/bin/snell-server -c /root/snell/snell-server.conf
-   AmbientCapabilities=CAP_NET_BIND_SERVICE
-   StandardOutput=syslog
-   StandardError=syslog
-   SyslogIdentifier=snell-server
+[Service]
+Type=simple
+User=nobody
+Group=nogroup
+LimitNOFILE=32768
+ExecStart=${INSTALL_DIR}/snell-server -c ${CONF_FILE}
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=snell-server
 
-   [Install]
-   WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
 EOF
 
-    # 重载 Systemd 配置
+    # 启动服务
     systemctl daemon-reload
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}重载 Systemd 配置失败。${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - 重载 Systemd 配置失败" >> "$LOG_FILE"
-        exit 1
-    fi
+    systemctl enable ${SERVICE_NAME}
+    systemctl start ${SERVICE_NAME}
 
-    # 开机自启动 Snell
-    systemctl enable snell
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}开机自启动 Snell 失败。${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - 开机自启动 Snell 失败" >> "$LOG_FILE"
-        exit 1
-    fi
-
-    # 启动 Snell 服务
-    systemctl start snell
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}启动 Snell 服务失败。${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - 启动 Snell 服务失败" >> "$LOG_FILE"
-        exit 1
-    fi
-
-    # 获取本机IP地址
-    HOST_IP=$(curl -s http://checkip.amazonaws.com)
-
-    # 获取IP所在国家
-    IP_COUNTRY=$(curl -s http://ipinfo.io/${HOST_IP}/country)
-
-    echo -e "${GREEN}Snell 安装成功${RESET}"
-    echo "${IP_COUNTRY} = snell, ${HOST_IP}, ${RANDOM_PORT}, psk = ${RANDOM_PSK}, version = 4, reuse = true, tfo = true"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Snell 安装成功: ${IP_COUNTRY}, ${HOST_IP}, ${RANDOM_PORT}, psk=${RANDOM_PSK}" >> "$LOG_FILE"
+    echo -e "${GREEN}Snell 安装完成${RESET}"
+    echo "配置文件位置: ${CONF_FILE}"
+    echo "请查看配置文件以获取端口和 PSK 信息"
 }
 
 # 卸载 Snell
 uninstall_snell() {
     echo -e "${CYAN}正在卸载 Snell${RESET}"
 
-    # 停止 Snell 服务
-    systemctl stop snell
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}停止 Snell 服务失败。${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - 停止 Snell 服务失败" >> "$LOG_FILE"
-        exit 1
+    # 停止并禁用服务
+    systemctl stop ${SERVICE_NAME}
+    systemctl disable ${SERVICE_NAME}
+
+    # 删除文件
+    rm -f ${INSTALL_DIR}/snell-server
+    rm -f /etc/systemd/system/${SERVICE_NAME}
+    
+    # 可选：删除配置文件
+    read -p "是否删除配置文件? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        rm -rf ${CONF_DIR}
     fi
 
-    # 禁用开机自启动
-    systemctl disable snell
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}禁用开机自启动失败。${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - 禁用开机自启动失败" >> "$LOG_FILE"
-        exit 1
-    fi
-
-    # 删除 Systemd 服务文件
-    rm /lib/systemd/system/snell.service
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}删除 Systemd 服务文件失败。${RESET}"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - 删除 Systemd 服务文件失败" >> "$LOG_FILE"
-        exit 1
-    fi
-
-    # 重载 Systemd 配置
     systemctl daemon-reload
 
-    # 删除安装的文件和目录
-    rm /usr/local/bin/snell-server
-    rm -rf /root/snell
+    echo -e "${GREEN}Snell 卸载完成${RESET}"
+}
 
-    echo -e "${GREEN}Snell 卸载成功${RESET}"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Snell 卸载成功" >> "$LOG_FILE"
+# 启动 Snell
+start_snell() {
+    echo -e "${CYAN}正在启动 Snell${RESET}"
+    systemctl start ${SERVICE_NAME}
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}Snell 启动成功${RESET}"
+    else
+        echo -e "${RED}Snell 启动失败${RESET}"
+    fi
+}
+
+# 停止 Snell
+stop_snell() {
+    echo -e "${CYAN}正在停止 Snell${RESET}"
+    systemctl stop ${SERVICE_NAME}
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}Snell 停止成功${RESET}"
+    else
+        echo -e "${RED}Snell 停止失败${RESET}"
+    fi
+}
+
+# 更新 Snell
+update_snell() {
+    echo -e "${CYAN}正在更新 Snell${RESET}"
+    
+    ARCH=$(uname -m)
+    if [[ "$ARCH" == "x86_64" ]]; then
+        DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-linux-amd64.zip"
+    elif [[ "$ARCH" == "aarch64" ]]; then
+        DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-linux-aarch64.zip"
+    else
+        echo -e "${RED}不支持的架构: $ARCH${RESET}"
+        return 1
+    fi
+    
+    if wget -O snell-server.zip $DOWNLOAD_URL; then
+        systemctl stop ${SERVICE_NAME}
+        mv ${INSTALL_DIR}/snell-server ${INSTALL_DIR}/snell-server.old
+        unzip -o snell-server.zip -d ${INSTALL_DIR}
+        chmod +x ${INSTALL_DIR}/snell-server
+        rm snell-server.zip
+        systemctl start ${SERVICE_NAME}
+        echo -e "${GREEN}Snell 已更新完成${RESET}"
+    else
+        echo -e "${RED}下载失败，请检查网络连接${RESET}"
+        return 1
+    fi
 }
 
 # 显示菜单
 show_menu() {
-    clear
-    check_snell_installed
-    snell_installed=$?
-    check_snell_running
-    snell_running=$?
-
-    if [ $snell_installed -eq 0 ]; then
-        installation_status="${GREEN}已安装${RESET}"
-        if [ $snell_running -eq 0 ]; then
-            running_status="${GREEN}已启动${RESET}"
-        else
-            running_status="${RED}未启动${RESET}"
-        fi
-    else
-        installation_status="${RED}未安装${RESET}"
-        running_status="${RED}未启动${RESET}"
-    fi
-
     echo -e "${GREEN}=== Snell 管理工具 ===${RESET}"
-    echo -e "安装状态: ${installation_status}"
-    echo -e "运行状态: ${running_status}"
-    echo ""
     echo "1. 安装 Snell"
     echo "2. 卸载 Snell"
-    if [ $snell_installed -eq 0 ]; then
-        if [ $snell_running -eq 0 ]; then
-            echo "3. 停止 Snell"
-        else
-            echo "3. 启动 Snell"
-        fi
-    fi
+    echo "3. 启动 Snell"
+    echo "4. 停止 Snell"
+    echo "5. 更新 Snell"
+    echo "6. 查看 Snell 状态"
     echo "0. 退出"
     echo -e "${GREEN}======================${RESET}"
-    read -p "请输入选项编号: " choice
-    echo ""
 }
 
-# 捕获 Ctrl+C 信号
-trap 'echo -e "${RED}已取消操作${RESET}"; exit' INT
-
-# 主循环
+# 主函数
 main() {
     check_root
 
     while true; do
         show_menu
-        case "${choice}" in
-            1)
-                install_snell
-                ;;
-            2)
-                if [ $snell_installed -eq 0 ]; then
-                    uninstall_snell
-                else
-                    echo -e "${RED}Snell 尚未安装${RESET}"
-                    echo "$(date '+%Y-%m-%d %H:%M:%S') - 尝试卸载但 Snell 尚未安装" >> "$LOG_FILE"
-                fi
-                ;;
-            3)
-                if [ $snell_installed -eq 0 ]; then
-                    if [ $snell_running -eq 0 ]; then
-                        stop_snell
-                    else
-                        start_snell
-                    fi
-                else
-                    echo -e "${RED}Snell 尚未安装${RESET}"
-                    echo "$(date '+%Y-%m-%d %H:%M:%S') - 尝试管理服务但 Snell 尚未安装" >> "$LOG_FILE"
-                fi
-                ;;
-            0)
-                echo -e "${GREEN}已退出 Snell 管理工具${RESET}"
-                echo "$(date '+%Y-%m-%d %H:%M:%S') - 用户退出管理工具" >> "$LOG_FILE"
-                exit 0
-                ;;
-            *)
-                echo -e "${RED}无效的选项${RESET}"
-                echo "$(date '+%Y-%m-%d %H:%M:%S') - 用户输入无效选项: $choice" >> "$LOG_FILE"
-                ;;
+        read -p "请输入选项: " choice
+        case $choice in
+            1) install_snell ;;
+            2) uninstall_snell ;;
+            3) start_snell ;;
+            4) stop_snell ;;
+            5) update_snell ;;
+            6) systemctl status ${SERVICE_NAME} ;;
+            0) echo "退出"; exit 0 ;;
+            *) echo -e "${RED}无效的选项${RESET}" ;;
         esac
-        read -p "按 enter 键继续..."
+        echo
+        read -p "按 Enter 键继续..."
     done
 }
 
-# 执行主函数
+# 运行主函数
 main
