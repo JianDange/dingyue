@@ -18,7 +18,7 @@ SERVICE_NAME="snell.service"
 # Snell 配置
 SNELL_VERSION="4.1.1"
 INSTALL_DIR="/usr/local/bin"
-CONF_DIR="/root/snell"
+CONF_DIR="/etc/snell"
 CONF_FILE="${CONF_DIR}/snell-server.conf"
 
 # 检查是否以 root 权限运行
@@ -75,17 +75,18 @@ EOF
     fi
 
     # 创建 systemd 服务文件
-    cat > /etc/systemd/system/${SERVICE_NAME} << EOF
+    cat > ${SYSTEMD_SERVICE_FILE} << EOF
 [Unit]
 Description=Snell Proxy Service
 After=network.target
 
 [Service]
 Type=simple
-User=root
-Group=root
+User=nobody
+Group=nogroup
 LimitNOFILE=32768
 ExecStart=${INSTALL_DIR}/snell-server -c ${CONF_FILE}
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=snell-server
