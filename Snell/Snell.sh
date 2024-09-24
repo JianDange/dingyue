@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# 创建小写软链接
+if [ ! -L "/usr/local/bin/snell.sh" ]; then
+    ln -s "$(realpath "$0")" /usr/local/bin/snell.sh
+fi
+
+
 # 定义颜色代码
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -68,6 +74,7 @@ install_snell() {
         RANDOM_PSK=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 31)
         cat > ${CONF_FILE} << EOF
 [snell-server]
+dns = 1.1.1.1, 8.8.8.8, 2001:4860:4860::8888
 listen = ::0:${RANDOM_PORT}
 psk = ${RANDOM_PSK}
 ipv6 = true
@@ -75,7 +82,7 @@ EOF
     fi
 
     # 创建 systemd 服务文件
-    cat > ${SYSTEMD_SERVICE_FILE} << EOF
+    cat > /etc/systemd/system/${SERVICE_NAME} << EOF
 [Unit]
 Description=Snell Proxy Service
 After=network.target
@@ -86,7 +93,6 @@ User=nobody
 Group=nogroup
 LimitNOFILE=32768
 ExecStart=${INSTALL_DIR}/snell-server -c ${CONF_FILE}
-AmbientCapabilities=CAP_NET_BIND_SERVICE
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=snell-server
@@ -131,27 +137,17 @@ uninstall_snell() {
     echo -e "${GREEN}Snell 卸载完成${RESET}"
 }
 
-# 启动 Snell
-start_snell() {
-    echo -e "${CYAN}正在启动 Snell${RESET}"
-    systemctl start ${SERVICE_NAME}
+# 重启 Snell
+restart_snell() {
+    echo -e "${CYAN}正在重启 Snell${RESET}"
+    systemctl restart ${SERVICE_NAME}
     if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Snell 启动成功${RESET}"
+        echo -e "${GREEN}Snell 重启成功${RESET}"
     else
-        echo -e "${RED}Snell 启动失败${RESET}"
+        echo -e "${RED}Snell 重启失败${RESET}"
     fi
 }
 
-# 停止 Snell
-stop_snell() {
-    echo -e "${CYAN}正在停止 Snell${RESET}"
-    systemctl stop ${SERVICE_NAME}
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Snell 停止成功${RESET}"
-    else
-        echo -e "${RED}Snell 停止失败${RESET}"
-    fi
-}
 
 # 更新 Snell
 update_snell() {
@@ -185,11 +181,10 @@ update_snell() {
 show_menu() {
     echo -e "${GREEN}=== Snell 管理工具 ===${RESET}"
     echo "1. 安装 Snell"
-    echo "2. 卸载 Snell"
-    echo "3. 启动 Snell"
-    echo "4. 停止 Snell"
-    echo "5. 更新 Snell"
-    echo "6. 查看 Snell 状态"
+    echo "2. 重启 Snell"
+    echo "3. 更新 Snell"
+    echo "4. 查看 Snell 状态"
+    echo "5. 卸载 Snell"
     echo "0. 退出"
     echo -e "${GREEN}======================${RESET}"
 }
@@ -203,11 +198,10 @@ main() {
         read -p "请输入选项: " choice
         case $choice in
             1) install_snell ;;
-            2) uninstall_snell ;;
-            3) start_snell ;;
-            4) stop_snell ;;
-            5) update_snell ;;
-            6) systemctl status ${SERVICE_NAME} ;;
+            2) restart_snell ;;  # 请确保你有定义 restart_snell 函数
+            3) update_snell ;;
+            4) systemctl status ${SERVICE_NAME} ;;
+            5) uninstall_snell ;;
             0) echo "退出"; exit 0 ;;
             *) echo -e "${RED}无效的选项${RESET}" ;;
         esac
@@ -215,6 +209,7 @@ main() {
         read -p "按 Enter 键继续..."
     done
 }
+
 
 # 运行主函数
 main
