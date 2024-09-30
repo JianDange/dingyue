@@ -36,12 +36,14 @@ check_root() {
 }
 
 # 安装 Snell
+# 在 install_snell 函数中添加更多的错误检查和日志记录
+
 install_snell() {
-    echo -e "${CYAN}正在安装 Snell${RESET}"
+    echo "正在安装 Snell" | tee -a "$LOG_FILE"
 
     # 检查是否已安装
     if [ -f "${INSTALL_DIR}/snell-server" ]; then
-        echo -e "${YELLOW}Snell 已经安装。如需重新安装，请先卸载。${RESET}"
+        echo "Snell 已经安装。如需重新安装，请先卸载。" | tee -a "$LOG_FILE"
         return
     fi
 
@@ -52,20 +54,45 @@ install_snell() {
     elif [[ "$ARCH" == "aarch64" ]]; then
         DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-linux-aarch64.zip"
     else
-        echo -e "${RED}不支持的架构: $ARCH${RESET}"
+        echo "不支持的架构: $ARCH" | tee -a "$LOG_FILE"
         return 1
     fi
 
-    wget -O snell-server.zip $DOWNLOAD_URL
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}下载 Snell 失败${RESET}"
+    echo "下载 Snell: $DOWNLOAD_URL" | tee -a "$LOG_FILE"
+    if ! wget -O snell-server.zip $DOWNLOAD_URL; then
+        echo "下载 Snell 失败" | tee -a "$LOG_FILE"
         return 1
+    fi
+
+    # 检查 unzip 是否安装
+    if ! command -v unzip &> /dev/null; then
+        echo "unzip 未安装，正在安装..." | tee -a "$LOG_FILE"
+        apt-get update && apt-get install -y unzip
     fi
 
     # 解压并安装
-    unzip -o snell-server.zip -d ${INSTALL_DIR}
+    echo "解压 Snell" | tee -a "$LOG_FILE"
+    if ! unzip -o snell-server.zip -d ${INSTALL_DIR}; then
+        echo "解压 Snell 失败" | tee -a "$LOG_FILE"
+        return 1
+    fi
+
+    echo "设置执行权限" | tee -a "$LOG_FILE"
     chmod +x ${INSTALL_DIR}/snell-server
+
+    # 验证安装
+    if [ ! -f "${INSTALL_DIR}/snell-server" ]; then
+        echo "Snell 服务器文件不存在，安装失败" | tee -a "$LOG_FILE"
+        return 1
+    fi
+
+    echo "删除下载的压缩文件" | tee -a "$LOG_FILE"
     rm snell-server.zip
+
+    # ... 后续配置和服务启动步骤 ...
+
+    echo "Snell 安装成功" | tee -a "$LOG_FILE"
+}
 
     # 生成配置文件
     mkdir -p ${CONF_DIR}
