@@ -1,11 +1,4 @@
 #!/bin/bash
-
-# 创建小写软链接
-if [ ! -L "/usr/local/bin/snell.sh" ]; then
-    ln -s "$(realpath "$0")" /usr/local/bin/snell.sh
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - 创建了软链接 /usr/local/bin/snell.sh" >> "$LOG_FILE"
-fi
-
 # 定义颜色代码
 RED='\033[0;31m'
 GREEN='\033[0;32m'
