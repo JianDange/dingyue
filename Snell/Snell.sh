@@ -83,7 +83,7 @@ install_snell() {
         RANDOM_PSK=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 31)
         cat > ${CONF_FILE} << EOF
 [snell-server]
-dns = 127.0.0.1
+dns = 1.1.1.1 8.8.8.8
 listen = ::0:${RANDOM_PORT}
 psk = ${RANDOM_PSK}
 ipv6 = true
