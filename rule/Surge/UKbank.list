@@ -52,5 +52,5 @@ DOMAIN-SUFFIX,jaja.co.uk
 
 # zeal wallet
 DOMAIN-SUFFIX,rpc.gnosis.gateway.fm
-DOMAIN-SUFFIX-,relay.walletconnect.com
+DOMAIN-SUFFIX,relay.walletconnect.com
 DOMAIN-SUFFIX,o1301891.ingest.us.sentry.io
