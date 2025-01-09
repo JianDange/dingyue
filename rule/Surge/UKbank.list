@@ -51,6 +51,15 @@ DOMAIN-SUFFIX,jaja.finance
 DOMAIN-SUFFIX,jaja.co.uk
 
 # zeal wallet
+DOMAIN-SUFFIX,zeal.app
 DOMAIN-SUFFIX,rpc.gnosis.gateway.fm
 DOMAIN-SUFFIX,relay.walletconnect.com
 DOMAIN-SUFFIX,o1301891.ingest.us.sentry.io
+
+# Lemfi
+DOMAIN-SUFFIX,lemfi.com
+DOMAIN-SUFFIX,mobile-collector.newrelic.com
+DOMAIN-SUFFIX,app.lemonade.finance
+DOMAIN-SUFFIX,cdp.customer.io
+DOMAIN-SUFFIX,cdn.branch.io
+DOMAIN-SUFFIX,z5kgbulaunches.appsflyersdk.com
