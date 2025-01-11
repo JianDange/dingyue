@@ -50,7 +50,7 @@ DOMAIN-SUFFIX,neverless.com
 DOMAIN-SUFFIX,jaja.finance
 DOMAIN-SUFFIX,jaja.co.uk
 DOMAIN-SUFFIX,rudderstack.com
-DOMAIN-SUFFIX,jajav2.jaja.co.uk
+DOMAIN-SUFFIX,jajav2.jaja.co.uk,🇬🇧Bestvm UK,force-remote-dns
 
 # zeal wallet
 DOMAIN-SUFFIX,zeal.app
