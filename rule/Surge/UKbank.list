@@ -4,6 +4,13 @@ DOMAIN-SUFFIX,api.sta.monzo-alt.net
 DOMAIN-SUFFIX,internal-api.monzo.com
 DOMAIN-SUFFIX,monzo.statuspage.io
 
+# zopa
+DOMAIN-SUFFIX,zopa.com
+DOMAIN,h6wmjp-launches.appsflyersdk.com
+DOMAIN,vgs-collect-keeper.apps.verygood.systems
+DOMAIN-SUFFIX,js.verygoodvault.com
+DOMAIN,mcy3by64m9q8cbw9sx8d81xstm6m.device.marketingcloudapis.com
+
 # HSBC UK
 DOMAIN-SUFFIX,hsbc.co.uk
 
