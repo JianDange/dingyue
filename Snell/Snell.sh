@@ -22,7 +22,7 @@ LOG_FILE="/var/log/snell_manager.log"
 SERVICE_NAME="snell.service"
 
 # Snell 配置
-SNELL_VERSION="4.1.1"
+SNELL_VERSION="5.0.0"
 INSTALL_DIR="/usr/local/bin"
 CONF_DIR="/etc/snell"
 CONF_FILE="${CONF_DIR}/snell-server.conf"
@@ -52,9 +52,9 @@ install_snell() {
     # 下载 Snell
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
-        DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-linux-amd64.zip"
+        DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v5.0.0-linux-amd64.zip"
     elif [[ "$ARCH" == "aarch64" ]]; then
-        DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v${SNELL_VERSION}-linux-aarch64.zip"
+        DOWNLOAD_URL="https://dl.nssurge.com/snell/snell-server-v5.0.0-linux-aarch64.zip"
     else
         echo -e "${RED}不支持的架构: $ARCH${RESET}"
         echo "$(date '+%Y-%m-%d %H:%M:%S') - 不支持的架构: $ARCH" >> "$LOG_FILE"
